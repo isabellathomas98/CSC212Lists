@@ -2,6 +2,7 @@ package edu.smith.cs.csc212.lists;
 
 import me.jjfoley.adt.ArrayWrapper;
 import me.jjfoley.adt.ListADT;
+import me.jjfoley.adt.errors.RanOutOfSpaceError;
 import me.jjfoley.adt.errors.TODOErr;
 
 /**
@@ -26,6 +27,10 @@ public class GrowableList<T> extends ListADT<T> {
 	/**
 	 * This is the number of elements in the array that are used.
 	 */
+	
+	
+	private ArrayWrapper<T>bigger;
+	
 	private int fill;
 
 	/**
@@ -50,9 +55,15 @@ public class GrowableList<T> extends ListADT<T> {
 
 	@Override
 	public T removeIndex(int index) {
-		// slide to the left
-		throw new TODOErr();
-	}
+		checkNotEmpty();
+		T removed=this.getIndex(index);
+		fill--;
+		for (int i=index;i<fill;i++) {
+			this.array.setIndex(i, array.getIndex(i+1));
+		}
+			this.array.setIndex(fill,null);
+			return removed;
+		}
 
 	@Override
 	public void addFront(T item) {
@@ -71,14 +82,37 @@ public class GrowableList<T> extends ListADT<T> {
 	 * This private method is called when we need to make room in our GrowableList.
 	 */
 	private void resizeArray() {
-		// TODO: use this where necessary (already called in addBack!)
-		throw new TODOErr();
+		//  use this where necessary (already called in addBack!)
+		//throw new TODOErr();
+		//making array "grow"
+		
+		ArrayWrapper<T>bigger=new ArrayWrapper<>(this.array.size()*2);
+		for(int i=0;i<this.array.size();i++) {
+			bigger.setIndex(i, this.array.getIndex(i)); //think i need to change i??
+		}
+		this.array=bigger;
+		
 	}
 
 	@Override
 	public void addIndex(int index, T item) {
-		// slide to the right
-		throw new TODOErr();
+				checkInclusiveIndex(index);
+				if (fill<array.size()) {
+					for (int i=fill; i>index; i--) {
+					this.array.setIndex(i, array.getIndex(i-1));
+				}
+				fill++;
+				array.setIndex(index, item);
+				}else {
+				this.resizeArray();
+				for (int i=fill; i>index; i--) {
+					this.array.setIndex(i, array.getIndex(i-1));
+				}
+				fill++;
+				array.setIndex(index, item);
+				//throw new RanOutOfSpaceError();
+			}
+		//throw new TODOErr();
 	}
 
 	@Override

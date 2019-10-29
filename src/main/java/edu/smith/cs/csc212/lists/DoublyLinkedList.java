@@ -1,5 +1,8 @@
 package edu.smith.cs.csc212.lists;
 
+
+
+//import edu.smith.cs.csc212.lists.SinglyLinkedList.Node;
 import me.jjfoley.adt.ListADT;
 import me.jjfoley.adt.errors.TODOErr;
 
@@ -48,7 +51,14 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addFront(T item) {
-		throw new TODOErr();
+		if (start == null) {
+			start = end = new Node<T>(item);
+		} else {
+			Node<T> second = start;
+			start = new Node<T>(item);
+			start.after = second;
+			second.before = start;
+		}
 	}
 
 	@Override
@@ -70,8 +80,13 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public T getFront() {
-		throw new TODOErr();
+		checkNotEmpty();
+		//T firstValue=start.value;
+		//return firstValue;
+		return start.value;
 	}
+		//throw new TODOErr();
+	
 
 	@Override
 	public T getBack() {
@@ -89,12 +104,18 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public int size() {
-		throw new TODOErr();
+		int count = 0;
+		for (Node<T> n = this.start; n != null; n = n.after) {
+			count++;
+		}
+		return count;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new TODOErr();
+		return start == null;
+		//return end == null;
+		//throw new TODOErr();
 	}
 	
 	/**
