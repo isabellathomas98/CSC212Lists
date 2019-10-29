@@ -2,8 +2,12 @@ package edu.smith.cs.csc212.lists;
 
 
 
+
+
+
 //import edu.smith.cs.csc212.lists.SinglyLinkedList.Node;
 import me.jjfoley.adt.ListADT;
+import me.jjfoley.adt.errors.BadIndexError;
 import me.jjfoley.adt.errors.TODOErr;
 
 /**
@@ -34,19 +38,56 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	@Override
 	public T removeFront() {
 		checkNotEmpty();
-		throw new TODOErr();
+		T firstValue=start.value;
+		start=start.after;
+		return firstValue;
 	}
 
 	@Override
 	public T removeBack() {
 		checkNotEmpty();
-		throw new TODOErr();
+		if(size()==1) {
+			T firstValue=start.value;
+			start=null;
+			return firstValue;
+		}
+		T lastValue=end.value;
+		end=end.before;
+		end.after=null;
+		return lastValue;
+		
 	}
 
 	@Override
 	public T removeIndex(int index) {
 		checkNotEmpty();
-		throw new TODOErr();
+		Node<T> deleted=null;
+		if (index<0||index>size()-1) {
+			throw new BadIndexError(index);
+		}
+		if (index==0) {
+			return removeFront();
+		}
+		if (index==size()-1) {
+			return removeBack();
+		}
+		//else if (index>0 && index>size()){
+			int at=0;
+			
+			for (Node<T>n=start;n!=null;n=n.after) {
+			if (at==index) {
+				deleted=n;
+				n.after=deleted.after;
+				return deleted.value;
+				
+			}
+			
+			at++;
+			}
+			
+		//}
+		
+		return deleted.value;
 	}
 
 	@Override
@@ -64,7 +105,7 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 	@Override
 	public void addBack(T item) {
 		if (end == null) {
-			start = end = new Node<T>(item);
+			end = start = new Node<T>(item);
 		} else {
 			Node<T> secondLast = end;
 			end = new Node<T>(item);
@@ -75,31 +116,84 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addIndex(int index, T item) {
-		throw new TODOErr();
+		
+		if (index<0||index>size()) {
+			throw new BadIndexError(index);
+		}
+		if(index==0) {
+			addFront(item);
+		}
+		if (index==size()) {
+			addBack(item);
+		}
+		if(start==null) {
+			addFront(item);
+		}
+		if (index>0&&index<size()) {
+			int at=0;
+			for (Node<T>n=start; n!=null;n=end.after) {
+				
+				if (at==index-1) {
+					Node <T>inserted =new Node<T>(item);
+					n.before=inserted;
+					n=n.before;
+					
+					
+					//return;
+				}
+				at++;
+			
+			}
+		}
 	}
 
 	@Override
 	public T getFront() {
 		checkNotEmpty();
-		//T firstValue=start.value;
-		//return firstValue;
+		
 		return start.value;
 	}
-		//throw new TODOErr();
+		
 	
 
 	@Override
 	public T getBack() {
-		throw new TODOErr();
+		checkNotEmpty();
+		return end.value;
 	}
 	
 	@Override
 	public T getIndex(int index) {
-		throw new TODOErr();
+		checkNotEmpty();
+		if (index<0||index>=size()) {
+			throw new BadIndexError(index);
+		}
+		int at=0;
+		for(Node <T>current=start;current!=null;current=current.after) {
+			if(at++ ==index) {
+				return current.value;
+			}
+		}
+		throw new BadIndexError(index);
 	}
 	
 	public void setIndex(int index, T value) {
-		throw new TODOErr();
+		//throw new TODOErr();
+		if (start==null) {
+			this.start=new Node<T>(value);
+		}
+		if (start!=null) {
+		T original;
+		original=this.getIndex(index);
+		original=value;
+		
+		int at = 0;
+		for (Node<T> n = start; n != null; n = n.after) {
+			if (at++ == index) {
+				n.value=value;
+			}
+		}
+		}
 	}
 
 	@Override
@@ -113,7 +207,7 @@ public class DoublyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return start == null;
+		return (start == null);
 		//return end == null;
 		//throw new TODOErr();
 	}

@@ -44,11 +44,9 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 			secondtolast=current;
 			last=current.next;
 			deleted=last;
-			//current=current.next;
-			//secondtolast.next.next=null;
+			
 		}
 		deleted=last;
-		//deleted=secondtolast.next;
 		secondtolast.next=null;
 		
 		return deleted.value;}
@@ -102,7 +100,6 @@ public class SinglyLinkedList<T> extends ListADT<T> {
 
 	@Override
 	public void addIndex(int index, T item) {
-		//this method does not actually add anything..
 		if (index>size()||index<0){
 			throw new BadIndexError(index);
 		}
